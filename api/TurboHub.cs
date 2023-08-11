@@ -29,18 +29,18 @@ namespace RushGet.Function
                 if (response.IsSuccessStatusCode)
                 {
                     _logger.LogInformation("Success to get response from uri");
-                    var rep = req.CreateResponse(HttpStatusCode.InternalServerError);
-                    await rep.WriteStringAsync("Failed to get response from uri");
-                    return rep;
-                }
-                else
-                {
-                    _logger.LogInformation("Failed to get response from uri");
                     var rep = req.CreateResponse(HttpStatusCode.OK);
                     rep.Headers.Add("Content-Type", "application/octet-stream");
                     rep.Headers.Add("Content-Disposition", response.Headers.GetValues("Content-Disposition").First());
                     await using var steam = await response.Content.ReadAsStreamAsync();
                     await steam.CopyToAsync(rep.Body);
+                    return rep;
+                }
+                else
+                {
+                    _logger.LogInformation("Failed to get response from uri");
+                    var rep = req.CreateResponse(HttpStatusCode.InternalServerError);
+                    await rep.WriteStringAsync("Failed to get response from uri");
                     return rep;
                 }
             }
