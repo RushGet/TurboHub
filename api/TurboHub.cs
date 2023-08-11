@@ -31,7 +31,9 @@ namespace RushGet.Function
                     _logger.LogInformation("Success to get response from uri");
                     var rep = req.CreateResponse(HttpStatusCode.OK);
                     rep.Headers.Add("Content-Type", "application/octet-stream");
-                    rep.Headers.Add("Content-Disposition", response.Headers.GetValues("Content-Disposition").First());
+                    // get last part of uri as file name
+                    var fileName = uri.Split('/').Last();
+                    rep.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
                     await using var steam = await response.Content.ReadAsStreamAsync();
                     await steam.CopyToAsync(rep.Body);
                     return rep;
