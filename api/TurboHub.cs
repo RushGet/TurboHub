@@ -15,7 +15,8 @@ namespace RushGet.Function
         }
 
         [Function("TurboHub")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
+        public async Task<HttpResponseData> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
         {
             // get uri parameters from query string
             // send get request to uri and return the response to the client
@@ -24,12 +25,12 @@ namespace RushGet.Function
             {
                 _logger.LogInformation("uri: {Uri}", uri);
                 var httpClient = new HttpClient();
-                var response = httpClient.GetAsync(uri).Result;
+                var response = await httpClient.GetAsync(uri);
                 if (response.IsSuccessStatusCode)
                 {
                     _logger.LogInformation("Success to get response from uri");
                     var rep = req.CreateResponse(HttpStatusCode.InternalServerError);
-                    rep.WriteString("Failed to get response from uri");
+                    await rep.WriteStringAsync("Failed to get response from uri");
                     return rep;
                 }
                 else
@@ -37,7 +38,9 @@ namespace RushGet.Function
                     _logger.LogInformation("Failed to get response from uri");
                     var rep = req.CreateResponse(HttpStatusCode.OK);
                     rep.Headers.Add("Content-Type", "application/octet-stream");
-                    response.Content.ReadAsStream().CopyTo(rep.Body);
+                    rep.Headers.Add("Content-Disposition", response.Headers.GetValues("Content-Disposition").First());
+                    await using var steam = await response.Content.ReadAsStreamAsync();
+                    await steam.CopyToAsync(rep.Body);
                     return rep;
                 }
             }
@@ -45,7 +48,7 @@ namespace RushGet.Function
             {
                 _logger.LogInformation("uri is null or empty");
                 var response = req.CreateResponse(HttpStatusCode.NotFound);
-                response.WriteString("Please pass a name on the query string");
+                await response.WriteStringAsync("Please pass a name on the query string");
                 return response;
             }
         }
