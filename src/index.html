@@ -32,10 +32,14 @@
     <h1 class="text-center"><a href="https://github.com/RushGet/TurboHub" target="_blank">TurboGet</a></h1>
     <form id="githubForm" class="text-center">
         <div class="input-group mb-3">
-        <input type="text" class="form-control" id="githubLink" placeholder="请输入" required>
+        <input type="text" class="form-control" id="githubLink" placeholder="请输入." required>
         <button type="submit" class="btn btn-primary">加速下载</button>
         <div>
-            <p class="text-muted">请输入 GitHub 仓库地址或者 Release 下载地址进行加速下载</p>
+            <p class="text-muted">请输入 GitHub 仓库地址或者 Release 下载地址进行加速下载<br>
+            例如：https://github.com/RushGet/RushGet/releases/download/v0.0.1/x86_64-pc-windows-gnu-rg.exe<br>
+            https://github.com/RushGet/TurboHub/archive/refs/heads/main.zip
+            </p>
+            
         </div>
         </div>
         <p class="text-muted">地址规则<br>
@@ -68,7 +72,7 @@
             // prefix
             const currentDomain = window.location.protocol + '//' + window.location.host + '/api/TurboHub?uri=' ;
             const targetUrl = currentDomain + encodeURIComponent(githubLink);
-            window.location.href = targetUrl;
+            window.open(targetUrl, '_blank');
             return;
           }
         }
@@ -78,7 +82,7 @@
   </script>
     <!-- Powered by -->
     <div class="powered-by">
-    Powered by <a href="https://rg.newbe.pro/" target="_blank">https://rg.newbe.pro/</a>
+    Docs: <a href="https://rg.newbe.pro/" target="_blank">https://rg.newbe.pro/</a>. Powered by <a href="https://azure.microsoft.com/products/app-service/static?WT.mc_id=DT-MVP-5004283#product-overviews" target="_blank">Azure Static Web Apps</a>.
     </div>
 </body>
 </html>
