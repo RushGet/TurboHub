@@ -18,8 +18,9 @@ namespace RushGet.Function
         /// <summary>
         /// check uri should be release or zip code
         /// template:
-        /// https://github.com/${org}/${project}/archive/refs/heads/${branch}.zip
-        /// https://github.com/${org}/${project}/releases/download/${tag}/${file}
+        /// ^https://github.com/${org}/${project}/archive/refs/heads/${branch}.zip$
+        /// ^https://github.com/${org}/${project}/releases/download/${tag}/${file}$
+        /// ^https://raw.githubusercontent.com/{org}/{project}/{branch}/{filepath}$
         /// </summary>
         /// <returns></returns>
         private static IEnumerable<Regex> UriCheckRegexes()
@@ -29,6 +30,9 @@ namespace RushGet.Function
                 RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
             yield return new Regex(
                 @"^https://github.com/.+/.+/releases/download/.+/.+$",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
+            yield return new Regex(
+                @"^https://raw.githubusercontent.com/.+/.+/.+/.+$",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
         }
 
